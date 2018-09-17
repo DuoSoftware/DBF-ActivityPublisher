@@ -1,7 +1,7 @@
 module.exports = {
     "Host": {
         "resource": "cluster",
-        "port": 3000
+        "port": 3001
     },
     "Security": {
         "ip": "",
