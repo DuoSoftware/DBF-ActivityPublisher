@@ -3,8 +3,6 @@ const shell = require('shelljs'),
   errors = require('restify-errors'),
   util = require('../util');
 
-var client = new RegClient(config)
-
 const publish = (req, res, next) => {
   let files = req.files['uploadedFiles'];
 
