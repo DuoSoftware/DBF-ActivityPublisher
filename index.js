@@ -10,6 +10,13 @@ const server = restify.createServer({
   version: "1.0.1"
 });
 
+server.use(function (req, res, next) {
+  // Website you wish to allow to connect
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
+  next();
+});
+
 server.use(restify.plugins.bodyParser({mapParams:true}));
 
 server.post('/activity/publish', uploads('uploadedFiles', {
