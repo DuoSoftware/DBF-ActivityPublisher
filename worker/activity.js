@@ -6,28 +6,29 @@ const shell = require('shelljs'),
 const publish = (req, res, next) => {
   let files = req.files['uploadedFiles'];
 
-
-  const publish = spawn('sh', [`publish.sh`], {
+  const unzip = spawn('unzip', [`${files.name}`], {
     cwd: `${files.uploadedPath}`
   });
 
-  // publish.stdout.on('data', (data) => {
-  //   console.log(`stdout:\n${data}`);
-  // });
+  const publish = spawn('npm', ['publish'], {
+    cwd: `${files.uploadedPath}/body-lang`
+  });
 
-  // publish.stderr.on('data', (data) => {
-  //   console.log(`stderr:\n${data}`);
-  // });
+  unzip.stdout.on('data', (data) => {
+    console.log(`unzip stdout:\n${data}`);
+  });
 
+  unzip.stderr.on('data', (data) => {
+    console.log(`unzip stderr:\n${data}`);
+  });
 
-  // shell.exec('./smoothflow-activity-template/vat.sh', function(code, stdout, stderr) {
-  //   console.log('Exit code:', code);
-  //   console.log('Program output:', stdout);
-  //   console.log('Program stderr:', stderr);
-  // });
+  publish.stdout.on('data', (data) => {
+    console.log(`publish stdout:\n${data}`);
+  });
 
-  // util.uploadToS3Bucket(files.uploadedFiles.path);
-  // util.uploadToS3BucketCopy(files.uploadedFiles);
+  publish.stderr.on('data', (data) => {
+    console.log(`publish stderr:\n${data}`);
+  });
 
   res.send();
 }

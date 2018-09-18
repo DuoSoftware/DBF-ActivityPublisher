@@ -50,7 +50,7 @@ module.exports = (field, options) => {
           fs.createReadStream(files.path)
             .pipe(fs.createWriteStream(`${outputpath}/${files.name}`));
 
-          util.copyFiles(['scripts/publish.sh', 'scripts/validate.sh'], outputpath);
+          // util.copyFiles(['scripts/publish.sh', 'scripts/validate.sh'], outputpath);
           
           req.files[field]['uploadedPath'] = outputpath;
           next();
