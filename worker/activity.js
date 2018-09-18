@@ -6,12 +6,10 @@ const shell = require('shelljs'),
 const publish = (req, res, next) => {
   let files = req.files['uploadedFiles'];
 
+  console.log(files.uploadedPath)
+
   const unzip = spawn('unzip', [`${files.name}`], {
     cwd: `${files.uploadedPath}`
-  });
-
-  const publish = spawn('npm', ['publish'], {
-    cwd: `${files.uploadedPath}/body-lang`
   });
 
   unzip.stdout.on('data', (data) => {
@@ -22,13 +20,17 @@ const publish = (req, res, next) => {
     console.log(`unzip stderr:\n${data}`);
   });
 
-  publish.stdout.on('data', (data) => {
-    console.log(`publish stdout:\n${data}`);
-  });
+  // const publish = spawn('npm', ['publish'], {
+  //   cwd: `${files.uploadedPath}/body-lang`
+  // });
 
-  publish.stderr.on('data', (data) => {
-    console.log(`publish stderr:\n${data}`);
-  });
+  // publish.stdout.on('data', (data) => {
+  //   console.log(`publish stdout:\n${data}`);
+  // });
+
+  // publish.stderr.on('data', (data) => {
+  //   console.log(`publish stderr:\n${data}`);
+  // });
 
   res.send();
 }
