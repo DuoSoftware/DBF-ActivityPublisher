@@ -10,11 +10,11 @@ const server = restify.createServer({
   version: "1.0.1"
 });
 
-server.use(function (req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-  next();
-});
+// server.use(function (req, res, next) {
+//   res.setHeader('Access-Control-Allow-Origin', '*');
+//   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+//   next();
+// });
 
 server.use(restify.plugins.bodyParser({mapParams:true}));
 
