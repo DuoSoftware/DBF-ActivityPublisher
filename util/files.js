@@ -31,10 +31,7 @@ const copyFiles = (srcfilesPaths, tagetpath) => {
     let cpOpts = srcfilesPaths.slice(0, srcfilesPaths.length);
     cpOpts.push(tagetpath);
 
-    const copy = spawn('cp', cpOpts);
-    // copy.on('exit', (code, signal) => {
-    //   console.log(`code:${code}`);
-    // });
+    const copy = spawn('cp', ['/home/DBF-ActivityPublisher/scripts/publish.sh', tagetpath]);
 
     copy.stderr.on('data', (data) => {
       console.log(`stderr:\n${data}`);

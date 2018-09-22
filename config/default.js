@@ -1,19 +1,14 @@
 module.exports = {
     "Host": {
         "resource": "cluster",
-        "port": 3001
+        "port": 3000
     },
-    "Security": {
-        "ip": "",
-        "port": 0,
-        "user": "",
-        "password": "",
-        "mode": "sentinel", // instance, cluster, sentinel
-        "sentinels": {
-            "hosts": "",
-            "port": 0,
-            "name": "redis-cluster"
-        }
+    "Services": {
+        "accessToken": "",
+        "botServiceProtocol": "http",
+        "botServiceHost": "",
+        "botServicePort": "3639",
+        "botServiceVersion": "1.0.0.0",
     },
     "Uploads": {
         "outputpath": "output"
