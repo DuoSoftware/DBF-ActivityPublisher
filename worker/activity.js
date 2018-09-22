@@ -2,6 +2,8 @@ const { exec }  = require('child_process'),
   BotService = require('../lib/BotService');
 
 const publish = (req, res, next) => {
+  let files = req.files['uploadedFiles'];
+  
   const publish2NPM = exec('sh publish.sh', {
     cwd: files.uploadedPath
   }, (err, stdout, stderr) => {
