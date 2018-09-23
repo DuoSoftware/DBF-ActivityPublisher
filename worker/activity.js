@@ -26,11 +26,11 @@ const publish = (req, res, next) => {
     console.log(`stdout: ${stdout}`);
     console.log(`stderr: ${stderr}`);
   
-    BotService.getAllServerRegistries(req.user.tenant, req.user.comapany, getToken(req)).then((registries) => {
+    BotService.getAllServerRegistries(req.user.tenant, req.user.company, getToken(req)).then((registries) => {
       if (registries && registries.length) {
         
         let serversToStart = registries.map((registry) => {
-          return BotService.runActivity(registry.remoteUrl, req.user.tenant, req.user.comapany, getToken(req))
+          return BotService.runActivity(registry.remoteUrl, req.user.tenant, req.user.company, getToken(req))
         });
   
         Promise.all(serversToStart).then((servers) => {
