@@ -11,9 +11,11 @@
   "license": "ISC",
   "dependencies": {
     "config": "^2.0.1",
+    "dvp-common-lite": "^1.0.1",
     "lodash": "^4.17.10",
     "request": "^2.88.0",
     "restify": "^7.2.1",
+    "restify-jwt": "^0.4.0",
     "shelljs": "^0.8.2",
     "unzip": "^0.1.11"
   },

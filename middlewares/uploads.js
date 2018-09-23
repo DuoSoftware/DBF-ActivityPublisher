@@ -16,7 +16,7 @@ const inArray = (key, arr) => {
 module.exports = (field, options) => {
 
   return (req, res, next) => {
-
+    
     if (!req.files || !req.files[field]) {
       return next(new errors.BadRequestError('No files to process.'));
     }

@@ -1,4 +1,16 @@
 module.exports = {
+    "Security": {
+        "ip": "",
+        "port": 6379,
+        "user": "",
+        "password": "",
+        "mode": "instance", // instance, cluster, sentinel
+        "sentinels": {
+          "hosts": "",
+          "port": 0,
+          "name": "redis-cluster"
+        }
+    },
     "Host": {
         "resource": "cluster",
         "port": 3000

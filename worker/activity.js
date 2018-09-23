@@ -1,6 +1,17 @@
 const { exec }  = require('child_process'),
   BotService = require('../lib/BotService');
 
+const getToken = (req) => {
+    if (req.headers.authorization && req.headers.authorization.split(' ')[0].toLowerCase() === 'bearer') {
+        return req.headers.authorization.split(' ')[1];
+    } else if (req.params && req.params.Authorization) {
+        return req.params.Authorization;
+    } else if (req.query && req.query.Authorization) {
+        return req.query.Authorization;
+    }
+    return null;
+}
+
 const publish = (req, res, next) => {
   let files = req.files['uploadedFiles'];
   
@@ -15,11 +26,11 @@ const publish = (req, res, next) => {
     console.log(`stdout: ${stdout}`);
     console.log(`stderr: ${stderr}`);
   
-    BotService.getAllServerRegistries(1,17).then((registries) => {
+    BotService.getAllServerRegistries(req.user.tenant, req.user.comapany).then((registries) => {
       if (registries && registries.length) {
         
         let serversToStart = registries.map((registry) => {
-          return BotService.runActivity(registry.remoteUrl, 1, 17)
+          return BotService.runActivity(registry.remoteUrl, req.user.tenant, req.user.comapany, getToken(req))
         });
   
         Promise.all(serversToStart).then((servers) => {
