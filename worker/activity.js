@@ -1,3 +1,8 @@
+const  async = require('async');
+const DeleteMarketplacePublic = require('../Functions/DbHandler').DeleteMarketplacePublic;
+const sendNotification = require('../Functions/NotificationHandler').sendNotification;
+const deleteFromNpm = require('../util/npm').unpublish;
+
 const { exec }  = require('child_process'),
   BotService = require('../lib/BotService');
 
@@ -11,6 +16,9 @@ const getToken = (req) => {
     }
     return null;
 }
+
+
+
 
 const publish = (req, res, next) => {
   let files = req.files['uploadedFiles'];
@@ -49,6 +57,72 @@ const publish = (req, res, next) => {
   });
 }
 
+
+
+const unpublish = (req, res) => {
+
+    /*
+    Done :
+    - Async Waterfall
+    - 1. Delete from DB
+    - 2. Delete from NPM
+    - 3. Send Notification
+     */
+
+    async.waterfall([
+        function(callback) {
+            DeleteMarketplacePublic(req, (response)=>{
+                if(JSON.parse(response).IsSuccess === 'true' || JSON.parse(response).IsSuccess === true){
+                    console.log(response);
+                    callback(null, response);
+                }
+                else{
+                    callback(response, null);
+                }
+
+            });
+
+        },
+        async function(arg1, callback) {
+
+
+        try{
+            let res = await deleteFromNpm(req.body.activity_name, req.body.activity_version)
+            callback(null, res);
+        }
+        catch (err) {
+            callback(err, null);
+            //throw new Error(400);
+
+        }
+
+
+        },
+        function(arg1, callback) {
+            sendNotification(req, (response)=>{
+                if(response.IsSuccess === 'true' || response.IsSuccess === true){
+                    console.log(response);
+                    callback(null, response);
+                }
+                else{
+                    callback(response, null);
+                }
+            });
+        }
+    ], function (err, result) {
+        if(err){
+            res.send({"IsSuccess": false, "message": "UnPublished Failed"});
+        }
+        else{
+            res.send({"IsSuccess": true, "message": "UnPublished Succeeded"});
+
+        }
+
+    });
+
+
+};
+
 module.exports = {
-  publish
-}
+  publish, unpublish
+};
