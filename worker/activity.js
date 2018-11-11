@@ -123,6 +123,58 @@ const unpublish = (req, res) => {
 
 };
 
+
+const versionUpdate = (req, res) => {
+
+    /*
+     Done :
+     - Async Waterfall
+     - 1. get from DB
+     - 3. Send Notification
+     */
+
+    async.waterfall([
+        function(callback) {
+            getEntriesByActivity(req, (response)=>{
+                if(JSON.parse(response).IsSuccess === 'true' || JSON.parse(response).IsSuccess === true){
+                    console.log(response);
+                    callback(null, JSON.parse(response));
+                }
+                else{
+                    callback(response, null);
+                }
+
+            });
+
+        },
+        function(arg1, callback) {
+
+            //TODO Loop through arg 1 and send notification
+            sendNotification(req, (response)=>{
+                if(response.IsSuccess === 'true' || response.IsSuccess === true){
+                    console.log(response);
+                    callback(null, response);
+                }
+                else{
+                    callback(response, null);
+                }
+            });
+        }
+    ], function (err, result) {
+        if(err){
+            res.send({"IsSuccess": false, "message": "UnPublished Failed"});
+        }
+        else{
+            res.send({"IsSuccess": true, "message": "UnPublished Succeeded"});
+
+        }
+
+    });
+
+
+};
+
+
 module.exports = {
-  publish, unpublish
+  publish, unpublish, versionUpdate
 };

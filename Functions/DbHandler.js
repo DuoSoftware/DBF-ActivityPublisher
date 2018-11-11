@@ -2,6 +2,7 @@ const MarketplacePublic = require('dbf-dbmodels/Models/MarketplacePublic').marke
 const mongoose = require("mongoose");
 const messageFormatter = require('dvp-common-lite/CommonMessageGenerator/ClientMessageJsonFormatter.js');
 const logger = require('dvp-common-lite/LogHandler/CommonLogHandler.js').logger;
+const ActivityUserRegistry = require('dbf-dbmodels/Models/ActivityUserRegistry').ActivityUserRegistry;
 
 
 
@@ -28,3 +29,23 @@ module.exports.DeleteMarketplacePublic = function(req, res){
         res(jsonString);
     });
 };
+
+
+module.exports.getEntriesByActivity = (req, res, next) => {
+
+    logger.debug("DBF-Services.getEntriesByActivity Internal method");
+    console.log("DBF-Services.getEntriesByActivity Internal method");
+
+    let jsonString;
+
+    ActivityUserRegistry.find({
+        'activity_name': req.params.id,
+    }, function(err, _entry) {
+        if (err) {
+            jsonString = messageFormatter.FormatMessage(err, "Falied getEntriesByActivity", false, undefined);
+        } else {
+            jsonString = messageFormatter.FormatMessage(undefined, "Successfully retrieve data for getEntriesByActivity", true, _entry);
+        }
+        res.end(jsonString);
+    });
+}

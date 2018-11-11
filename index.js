@@ -48,6 +48,11 @@ server.post('/activity/unpublish/:id', authorization({
     action: "read"
 }), activity.unpublish);
 
+server.post('/activity/versionUpdate/:id', authorization({
+    resource: "user",
+    action: "read"
+}), activity.versionUpdate);
+
 server.listen(port, () => {
   console.log(`${server.name} listening at ${server.url}`);
 });
