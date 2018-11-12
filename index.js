@@ -53,6 +53,11 @@ server.post('/activity/versionUpdate/:id', authorization({
     action: "read"
 }), activity.versionUpdate);
 
+server.get('/activity/installPublicActivity/:id', authorization({
+    resource: "user",
+    action: "read"
+}), activity.installPublic);
+
 server.listen(port, () => {
   console.log(`${server.name} listening at ${server.url}`);
 });

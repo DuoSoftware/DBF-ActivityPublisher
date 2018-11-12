@@ -1,5 +1,6 @@
 const  async = require('async');
-const DeleteMarketplacePublic = require('../Functions/DbHandler').DeleteMarketplacePublic;
+const DbHandler = require('../Functions/DbHandler');
+
 const sendNotification = require('../Functions/NotificationHandler').sendNotification;
 const deleteFromNpm = require('../util/npm').unpublish;
 
@@ -71,7 +72,7 @@ const unpublish = (req, res) => {
 
     async.waterfall([
         function(callback) {
-            DeleteMarketplacePublic(req, (response)=>{
+            DbHandler.DeleteMarketplacePublic(req, (response)=>{
                 if(JSON.parse(response).IsSuccess === 'true' || JSON.parse(response).IsSuccess === true){
                     console.log(response);
                     callback(null, response);
@@ -135,7 +136,7 @@ const versionUpdate = (req, res) => {
 
     async.waterfall([
         function(callback) {
-            getEntriesByActivity(req, (response)=>{
+            DbHandler.getEntriesByActivity(req, (response)=>{
                 if(JSON.parse(response).IsSuccess === 'true' || JSON.parse(response).IsSuccess === true){
                     console.log(response);
                     callback(null, JSON.parse(response));
@@ -149,7 +150,6 @@ const versionUpdate = (req, res) => {
         },
         function(arg1, callback) {
 
-            //TODO Loop through arg 1 and send notification
             sendNotification(req, (response)=>{
                 if(response.IsSuccess === 'true' || response.IsSuccess === true){
                     console.log(response);
@@ -175,6 +175,62 @@ const versionUpdate = (req, res) => {
 };
 
 
+const installPublic = (req, res) => {
+
+    /*
+     Done :
+     - Async Waterfall
+     - 1. get from DB
+     - 3. Send Notification
+     */
+
+    async.waterfall([
+        function(callback) {
+            DbHandler.GetMarketplacePublic(req, (response)=>{
+                if(JSON.parse(response).IsSuccess === 'true' || JSON.parse(response).IsSuccess === true){
+                    console.log(response);
+                    callback(null, JSON.parse(response));
+                }
+                else{
+                    callback(response, req, null);
+                }
+
+            });
+
+        },
+        function(arg1, callback) {
+
+            let result = arg1.Result;
+            if(result.hasOwnProperty('_id')){
+                delete result['_id']
+            }
+            DbHandler.SaveAnPublicActivity(result, req, (response)=>{
+                if(JSON.parse(response).IsSuccess === 'true' || JSON.parse(response).IsSuccess === true){
+                    console.log(response);
+                    callback(null, JSON.parse(response));
+                }
+                else{
+                    callback(response, null);
+                }
+
+            });
+        }
+    ], function (err, result) {
+        if(err){
+            res.send({"IsSuccess": false, "message": "Public Activity Install Failed"});
+        }
+        else{
+            console.log(result)
+            res.send({"IsSuccess": true, "message": "Public Activity Install Succeeded"});
+
+        }
+
+    });
+
+
+};
+
+
 module.exports = {
-  publish, unpublish, versionUpdate
+  publish, unpublish, versionUpdate, installPublic
 };
