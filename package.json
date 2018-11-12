@@ -12,7 +12,7 @@
   "dependencies": {
     "async": "^2.6.1",
     "config": "^2.0.1",
-    "dbf-dbmodels": "^1.0.108",
+    "dbf-dbmodels": "^1.0.110",
     "dvp-common-lite": "^1.0.1",
     "lodash": "^4.17.10",
     "npm-registry-client": "^8.6.0",

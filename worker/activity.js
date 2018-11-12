@@ -188,7 +188,7 @@ const installPublic = (req, res) => {
         function(callback) {
             DbHandler.GetMarketplacePublic(req, (response)=>{
                 if(JSON.parse(response).IsSuccess === 'true' || JSON.parse(response).IsSuccess === true){
-                    console.log(response);
+                    //console.log(response);
                     callback(null, JSON.parse(response));
                 }
                 else{
@@ -206,7 +206,7 @@ const installPublic = (req, res) => {
             }
             DbHandler.SaveAnPublicActivity(result, req, (response)=>{
                 if(JSON.parse(response).IsSuccess === 'true' || JSON.parse(response).IsSuccess === true){
-                    console.log(response);
+                    //console.log(response);
                     callback(null, JSON.parse(response));
                 }
                 else{
@@ -220,7 +220,7 @@ const installPublic = (req, res) => {
             res.send({"IsSuccess": false, "message": "Public Activity Install Failed"});
         }
         else{
-            console.log(result)
+            //console.log(result)
             res.send({"IsSuccess": true, "message": "Public Activity Install Succeeded"});
 
         }
