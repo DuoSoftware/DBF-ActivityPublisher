@@ -37,6 +37,7 @@ module.exports = {
         "registryUrl": "https://registry.npmjs.com/",
         "username": "",
         "password": "",
-        "email": ""
+        "email": "",
+        "scope": "" 
     }
 };

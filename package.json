@@ -14,13 +14,13 @@
     "config": "^2.0.1",
     "dbf-dbmodels": "^1.0.110",
     "dvp-common-lite": "^1.0.1",
-    "lodash": "^4.17.10",
     "npm-registry-client": "^8.6.0",
     "request": "^2.88.0",
     "restify": "^7.2.1",
     "restify-jwt": "^0.4.0",
     "shelljs": "^0.8.2",
-    "unzip": "^0.1.11"
+    "unzip": "^0.1.11",
+    "tar": "^4.4.7"
   },
   "devDependencies": {}
 }

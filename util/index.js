@@ -1,4 +1,11 @@
-const _ = require('lodash');
+// const _ = require('lodash');
 
+// module.exports = _.extend({}, require('./files'), require('./s3'));
 
-module.exports = _.extend({}, require('./files'), require('./s3'), require('./npm')) ;
+module.exports = {
+  FileSystemOps: require('./filesystemOps'),
+  NPM: require('./npm'),
+  S3: require('./s3'),
+  ZipArchive: require('./zipArchive'),
+  TarArchive: require('./tarArchive')
+}

@@ -1,7 +1,6 @@
-const fs = require('fs'),
-  config = require('config'),
+const config = require('config'),
   errors = require('restify-errors'),
-  util = require('../util');
+  { FileSystemOps, ZipArchive } = require('../util');
 
 const inArray = (key, arr) => {
   if (Array.isArray(arr)) {
@@ -22,17 +21,19 @@ module.exports = (field, options) => {
     }
 
     let opts = Object.create(options) || {},
+      extMimeMap = {"application/zip":"zip", "application/x-tar":"tar"}
       files = req.files[field],
-      ext = util.getExtension(files.name),
+      {filename, ext} = FileSystemOps.parseFileName(files.name)
+      mimeType = files.type;
       size = files.size;
 
-    opts.allowedExts = (Array.isArray(options.allowedExts) && options.allowedExts.length) ? options.allowedExts : "any";
+    opts.allowedMimes = (Array.isArray(options.allowedMimes) && options.allowedMimes.length) ? options.allowedMimes : "any";
     opts.maxSize = (typeof options.maxSize === "number") ? options.maxSize : 50000;
     opts.unloadTo = (options.unloadTo && options.unloadTo.length) ? options.unloadTo
       : (config.Uploads.outputpath) ? config.Uploads.outputpath 
       : './';
 
-    if (opts.allowedExts !== "any" && inArray(ext, options.allowedExts) < 0) {
+    if (opts.allowedMimes !== "any" && inArray(mimeType, options.allowedMimes) < 0) {
       return next(new errors.BadRequestError(`.${ext} file type not permitted for upload.`));
     }
 
@@ -41,19 +42,27 @@ module.exports = (field, options) => {
     }
 
     try {
-      let outputpath = `${opts.unloadTo}/${Date.now()}`;
+      let outputpath = `${opts.unloadTo}/${Date.now()}/`;
 
-      util.ensureDirExists(outputpath, 0744, (err, path) => {
+      FileSystemOps.ensureDirExists(outputpath, 0744, (err, path) => {
         if (err)  { 
           return next(err); 
         } else {
-          fs.createReadStream(files.path)
-            .pipe(fs.createWriteStream(`${outputpath}/${files.name}`));
-
-          util.copyFiles(['scripts/publish.sh', 'scripts/validate.sh'], outputpath);
-
-          req.files[field]['uploadedPath'] = outputpath;
-          next();
+          // let archive = new Archive(extMimeMap[mimeType]);
+          outputpath += `${filename}`;
+          let zip = new ZipArchive();
+          zip
+            .extract(files.path, outputpath)
+            .then((extracted_path) => {
+              req['activity_package'] = {
+                filename,
+                srcpath: `${extracted_path}`
+              };
+              next()
+            })
+            .catch((err) => {
+              return next(new errors.BadRequestError(`The uploaded file unable to read. It may be corrupt.`));
+            });
         }
       });
     } catch (err) {

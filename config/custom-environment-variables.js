@@ -37,6 +37,7 @@ module.exports = {
         "registryUrl": "NPM_REGISTRY_URL",
         "username": "NPM_USERNAME",
         "password": "NPM_PASSWORD",
-        "email": "NPM_EMAIL"
+        "email": "NPM_EMAIL",
+        "scope": "NPM_SCOPE"
     }
 };
