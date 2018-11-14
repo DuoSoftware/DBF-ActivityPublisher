@@ -18,8 +18,7 @@ const getToken = (req) => {
 
 const publish = (req, res, next) => {
 
-  let user = {company: 13, tenant:1}
-    // user = req.user, 
+  let user = req.user, 
     activityPackage = req.activity_package;
 
   try {
