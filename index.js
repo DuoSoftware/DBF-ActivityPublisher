@@ -1,4 +1,5 @@
 const restify  = require('restify'),
+  restifyCORS = require('restify-cors-middleware'),
   config = require('config'),
   jwt = require('restify-jwt'),
   secret = require('dvp-common-lite/Authentication/Secret.js'),
@@ -24,15 +25,21 @@ const port = (config.Host)? config.Host.port: 3000;
 
 const server = restify.createServer({
   name: 'Activity Publisher',
-  version: "1.0.1"
+  version: "1.0.2"
 });
 
+const cors = restifyCORS({
+  allowHeaders: ['authorization', 'Authorization'],
+});
+
+server.pre(cors.preflight);
+server.use(cors.actual);
 server.use(restify.plugins.bodyParser({mapParams:true}));
 server.use(restify.plugins.queryParser({mapParams: true}));
 server.use(jwt({secret: secret.Secret}));
 
 server.post('/activity/publish', authorization({resource: "user", action: "read"}), uploads('uploadedFiles', {
-    'allowedMimes': ['application/zip'],
+    'allowedMimes': ['application/zip', 'application/x-zip-compressed'],
     'maxSize': 100000000000000000000,
     'unloadTo': ''
 }), activityHandler.publish);

@@ -17,10 +17,11 @@
     "npm-registry-client": "^8.6.0",
     "request": "^2.88.0",
     "restify": "^7.2.1",
+    "restify-cors-middleware": "^1.1.1",
     "restify-jwt": "^0.4.0",
     "shelljs": "^0.8.2",
-    "unzip": "^0.1.11",
-    "tar": "^4.4.7"
+    "tar": "^4.4.7",
+    "unzip": "^0.1.11"
   },
   "devDependencies": {}
 }
