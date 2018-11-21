@@ -4,6 +4,7 @@
 
 module.exports = {
   FileSystemOps: require('./filesystemOps'),
+  RequestOps: require('./requestOps'),
   NPM: require('./npm'),
   S3: require('./s3'),
   ZipArchive: require('./zipArchive'),

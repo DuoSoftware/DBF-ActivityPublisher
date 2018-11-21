@@ -38,46 +38,8 @@ const ensureDirExists = (path, mask, cb) => {
   }
 }
 
-const copyFiles = (srcfilesPaths, tagetpath) => {
-  if (Array.isArray(srcfilesPaths) && srcfilesPaths.length) {
-    let cpOpts = srcfilesPaths.slice(0, srcfilesPaths.length);
-    cpOpts.push(tagetpath);
-
-    const copy = spawn('cp', ['/home/DBF-ActivityPublisher/scripts/publish.sh', tagetpath]);
-
-    copy.stderr.on('data', (data) => {
-      console.log(`stderr:\n${data}`);
-    });
-
-    copy.stdout.on('data', (data) => {
-      console.log(`stdout:\n${data}`)
-    });
-  }
-}
-
-const extractZip = (srcpath, destpath) => {
-  if (srcpath && destpath) {
-    return new Promise((resolve, reject) => {
-      try {
-        fs.createReadStream(srcpath)
-          .pipe(unzip.Extract({ path: destpath }))
-          .on('end', () => { resolve(destpath); })
-          .on('error', (err) => { reject(err); })
-      } catch (err) {
-        reject(err);
-      }
-    }); 
-  }else {
-    Promise.reject(new Error('Source file path and output path required inorder to extract the zip file'));
-  }
-}
-
 module.exports = {
   parseFileName,
   isFileExists,
   ensureDirExists,
-  copyFiles,
-  zip: {
-    extract: extractZip,
-  },
 }

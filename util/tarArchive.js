@@ -1,19 +1,16 @@
-const tar = require('tar');
-  
+const tar = require('tar'),
+  fs = require('fs');
+
 class TarArchive {
   constructor() {}
-  
+
   create(srcpathList, destpath, enableGZip=false) {
     if (!Array.isArray(srcpathList) || !srcpathList.length) {
-      return Promise.reject(new Error())
+      throw new Error();
     }
 
-    return tar.c({
-      gzip: enableGZip,
-      file: destpath
-    },
-    srcpathList
-    );
+    tar.c({ gzip: enableGZip, sync: true}, srcpathList)
+      .pipe(fs.createWriteStream(destpath))
   }
 
   extract(srcpath, destpath) {

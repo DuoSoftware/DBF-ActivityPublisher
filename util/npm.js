@@ -2,7 +2,7 @@ const fs = require('fs'),
   config = require('config'),
   NPMRegistryClient = require('npm-registry-client');
 
-const publish = (activity) => {
+const publish = (activity, asPrivateModule=false) => {
 
   if (!config.NPM) { Promise.reject(new Error('')); }
 
@@ -15,20 +15,22 @@ const publish = (activity) => {
       password: npmConfig.password,
       email: npmConfig.email,
       alwaysAuth: true },
-    // access = access || 'public',
-    // access = 'restricted',
+    body = fs.createReadStream(activity.tarball),
     access = 'public',
     metadata = {
-      // name: `@smoothflow/${activity.name}`,
       name: `${activity.name}`,
       version: `${activity.version}`
-    },
-    body = fs.createReadStream(activity.tarball);
+    };
+  
+  if (asPrivateModule) {
+    access = 'restricted'
+    metadata['name'] = `${npmConfig.scope}/${activity.name}`
+  }
 
   return new Promise((resolve, reject) => {
     npmRegClient.publish(npmConfig.registryUrl, {auth, access, body, metadata}, (err, result) => {
       if(err) { reject(err); }
-      resolve(result);
+      resolve(metadata);
     });
   });
 }

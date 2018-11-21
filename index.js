@@ -10,22 +10,11 @@ const restify  = require('restify'),
 
 let connection  = new MongooseConnection();
 
-const getToken = (req) => {
-    if (req.headers.authorization && req.headers.authorization.split(' ')[0].toLowerCase() === 'bearer') {
-        return req.headers.authorization.split(' ')[1];
-    } else if (req.params && req.params.Authorization) {
-        return req.params.Authorization;
-    } else if (req.query && req.query.Authorization) {
-        return req.query.Authorization;
-    }
-    return null;
-}
-
 const port = (config.Host)? config.Host.port: 3000;
 
 const server = restify.createServer({
   name: 'Activity Publisher',
-  version: "1.0.2"
+  version: "1.0.3"
 });
 
 const cors = restifyCORS({
@@ -38,9 +27,10 @@ server.use(restify.plugins.bodyParser({mapParams:true}));
 server.use(restify.plugins.queryParser({mapParams: true}));
 server.use(jwt({secret: secret.Secret}));
 
-server.post('/activity/publish', authorization({resource: "user", action: "read"}), uploads('uploadedFiles', {
+// authorization({resource: "user", action: "read"})
+server.post('/activity/publish', authorization({resource: "user", action: "read"}),uploads('uploadedFiles', {
     'allowedMimes': ['application/zip', 'application/x-zip-compressed'],
-    'maxSize': 100000000000000000000,
+    'maxSize': 100, // MB
     'unloadTo': ''
 }), activityHandler.publish);
 

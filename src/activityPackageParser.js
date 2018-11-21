@@ -1,16 +1,15 @@
-const fs = require('fs'),
-  path = require('path'),
+const path = require('path'),
   { FileSystemOps, TarArchive } = require('../util'),
   PackageJSON = require('./packageJson');
 
 class ActivityPackageParser {
-  constructor(pkgpath, pkgname) {
-    if (typeof pkgpath === 'string' && pkgpath.length) {
-      let abPkgPath = path.resolve(pkgpath);
+  constructor(pkgname, pkgpath) {
+    if (pkgname && typeof pkgpath === 'string' && pkgpath.length) {
+      this.bundle_name = pkgname;
 
+      let abPkgPath = path.resolve(pkgpath);
       if(FileSystemOps.isFileExists(abPkgPath)) {
         this.bundle_path = abPkgPath;
-        this.bundle_name = pkgname;
       }else {
         throw new Error(`No such package found in provided file path`);
       }
@@ -20,7 +19,7 @@ class ActivityPackageParser {
     }
   }
   
-  parse() { 
+  parse() {
     
     // load package.json
     let packagejson_path = `${this.bundle_path}/package.json`,
@@ -49,13 +48,21 @@ class ActivityPackageParser {
         );
       }
 
-      let activityConfig = {
-        name: pkgjsonBody['name'],
-        version: pkgjsonBody['version'],
-        srcpath: `${this.bundle_path}`,
+      try {
+        let tar = new TarArchive();
+          tar.create([`${this.bundle_path}/`], `${this.bundle_path}/${this.bundle_name}.tgz`, true)
+            
+        let activityConfig = {
+          name: pkgjsonBody['name'],
+          version: pkgjsonBody['version'],
+          srcpath: `${this.bundle_path}`,
+          tarball: `${this.bundle_path}\\${this.bundle_name}.tgz`
+        }
+
+        return activityConfig;
+      } catch (error) {
+        console.log(error)
       }
-  
-      return activityConfig;  
     }
   }
 
