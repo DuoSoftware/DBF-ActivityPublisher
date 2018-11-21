@@ -4,13 +4,18 @@ const tar = require('tar'),
 class TarArchive {
   constructor() {}
 
-  create(srcpathList, destpath, enableGZip=false) {
-    if (!Array.isArray(srcpathList) || !srcpathList.length) {
-      throw new Error();
-    }
+    create(srcpathList, destpath, enableGZip=false) {
+      if (!Array.isArray(srcpathList) || !srcpathList.length) {
+        throw new Error();
+      }
 
-    tar.c({ gzip: enableGZip, sync: true}, srcpathList)
-      .pipe(fs.createWriteStream(destpath))
+      return tar.c({ gzip: enableGZip, file: destpath}, srcpathList)
+        .then(() => {
+          return destpath;
+        }) 
+        .catch(() => {
+          return null;
+        })
   }
 
   extract(srcpath, destpath) {

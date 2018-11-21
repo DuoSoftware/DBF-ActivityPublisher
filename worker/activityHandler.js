@@ -23,13 +23,13 @@ const publish = (req, res, next) => {
 			.then((npm_module) => {
 				console.log(`${npm_module.name}, version ${npm_module.version} has been published.`);
 				
-				let activity = {
+				let activityObj = {
 					"activity_name": activity.name,
 					"npm_module" : `${npm_module.name}`,
 					"npm_version" : `${npm_module.version}`};
 					
 				// update npm module releated details of activity in activity registry
-				return BotService.updateActivity(activity, user.tenant, user.company, authToken);
+				return BotService.updateActivity(activityObj, user.tenant, user.company, authToken);
 			})
 			.then(() => {
 				console.log(`The ${activity.name} activity record has been updated with npm module info.`);

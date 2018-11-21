@@ -48,21 +48,13 @@ class ActivityPackageParser {
         );
       }
 
-      try {
-        let tar = new TarArchive();
-          tar.create([`${this.bundle_path}/`], `${this.bundle_path}/${this.bundle_name}.tgz`, true)
-            
-        let activityConfig = {
-          name: pkgjsonBody['name'],
-          version: pkgjsonBody['version'],
-          srcpath: `${this.bundle_path}`,
-          tarball: `${this.bundle_path}\\${this.bundle_name}.tgz`
-        }
-
-        return activityConfig;
-      } catch (error) {
-        console.log(error)
+      let activityConfig = {
+        name: pkgjsonBody['name'],
+        version: pkgjsonBody['version'],
+        srcpath: `${this.bundle_path}`,
       }
+
+      return activityConfig;
     }
   }
 
