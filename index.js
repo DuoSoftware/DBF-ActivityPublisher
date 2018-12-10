@@ -38,7 +38,7 @@ server.post('/activity/unpublish/:id', authorization({
     action: "read"
 }), activityHandler.unpublish);
 
-server.post('/activity/versionUpdate/:id', authorization({
+server.get('/activity/versionUpdate/:id/:ver', authorization({
     resource: "user",
     action: "read"
 }), activityHandler.versionUpdate);

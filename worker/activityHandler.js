@@ -102,7 +102,7 @@ const unpublish = (req, res) => {
 
 			},
 			function (arg1, callback) {
-				sendNotification(req, (response) => {
+				sendNotification(req.user.company, {}, req.headers.Authorization, (response) => {
 					if (response.IsSuccess === 'true' || response.IsSuccess === true) {
 						console.log(response);
 						callback(null, response);
@@ -136,15 +136,15 @@ const versionUpdate = (req, res) => {
 	 Done :
 	 - Async Waterfall
 	 - 1. get from DB
-	 - 3. Send Notification
+	 - 2. Send Notification
 	 */
 
 	async.waterfall([
 		function (callback) {
 			DbHandler.getEntriesByActivity(req, (response) => {
 				if (JSON.parse(response).IsSuccess === 'true' || JSON.parse(response).IsSuccess === true) {
-					console.log(response);
-					callback(null, JSON.parse(response));
+					//console.log(response);
+					callback(null, JSON.parse(response).Result);
 				} else {
 					callback(response, null);
 				}
@@ -152,16 +152,44 @@ const versionUpdate = (req, res) => {
 			});
 
 		},
-		function (arg1, callback) {
+		function (users, callback) {
 
-			sendNotification(req, (response) => {
-				if (response.IsSuccess === 'true' || response.IsSuccess === true) {
-					console.log(response);
-					callback(null, response);
-				} else {
-					callback(response, null);
-				}
-			});
+	    //let success = [];
+	    //let error = [];
+            for (let i in users) {
+                if(users.hasOwnProperty(i)){
+                    (function(user) {
+                        console.log(user);
+
+                        let data = {
+                            "notification" : "Version Update",
+                            "data" : {
+                                "message"  : `${req.params.id} has been updated to ${req.params.ver}, please update now`
+                            }
+                        };
+                        sendNotification(user.company, data, req.headers.authorization, (response) => {
+                            if (response.IsSuccess === 'true' || response.IsSuccess === true) {
+                                //console.log(response);
+                                //callback(null, response);
+                                //success.push(response)
+                            } else {
+                                //callback(response, null);
+                                //error.push(response)
+                            }
+                        });
+
+                        if(users.length-1 === parseInt(i)){
+                            callback(null, "Done");
+                        }
+                    })(users[i]);
+                }
+
+            }
+
+
+
+
+
 		}
 	], function (err, result) {
 		if (err) {
@@ -188,7 +216,7 @@ const installPublic = (req, res) => {
 	 Done :
 	 - Async Waterfall
 	 - 1. get from DB
-	 - 3. Send Notification
+	 - 2. Send Notification
 	 */
 
 	async.waterfall([
@@ -219,7 +247,22 @@ const installPublic = (req, res) => {
 				}
 
 			});
-		}
+		},
+        function (arg1, callback) {
+
+            let data = {
+                "notification" : "Installed to Public",
+                "data" : arg1
+            };
+            sendNotification(req.user.company, data, req.headers.authorization, (response) => {
+                if (response.IsSuccess === 'true' || response.IsSuccess === true) {
+                    console.log(response);
+                    callback(null, response);
+                } else {
+                    callback(response, null);
+                }
+            });
+        }
 	], function (err, result) {
 		if (err) {
 			res.send({

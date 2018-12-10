@@ -270,6 +270,6 @@ module.exports.getEntriesByActivity = (req, res, next) => {
         } else {
             jsonString = messageFormatter.FormatMessage(undefined, "Successfully retrieve data for getEntriesByActivity", true, _entry);
         }
-        res.end(jsonString);
+        res(jsonString);
     });
 }
