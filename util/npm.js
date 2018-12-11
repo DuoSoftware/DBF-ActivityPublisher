@@ -55,7 +55,7 @@ const unpublish = (package_name, package_version) => {
 
   let
     auth = {
-      username: npmConfig.usename, 
+      username: npmConfig.username,
       password: npmConfig.password,
       email: npmConfig.email,
       alwaysAuth: true },
