@@ -15,6 +15,7 @@
     "dbf-dbmodels": "^1.0.110",
     "dbf-notificationmanager": "^1.0.0",
     "dvp-common-lite": "^1.0.1",
+    "natives": "^1.1.6",
     "npm-registry-client": "^8.6.0",
     "request": "^2.88.0",
     "restify": "^7.2.1",

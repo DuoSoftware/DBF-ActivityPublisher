@@ -243,19 +243,29 @@ const installPublic = (req, res) => {
         },
         function (arg1, callback) {
 
+            console.log(arg1)
             let result = arg1.Result;
-            if (result.hasOwnProperty('_id')) {
-                delete result['_id']
-            }
-            DbHandler.SaveAnPublicActivity(result, req, (response) => {
-                if (JSON.parse(response).IsSuccess === 'true' || JSON.parse(response).IsSuccess === true) {
-                    //console.log(response);
-                    callback(null, JSON.parse(response));
-                } else {
-                    callback(response, null);
-                }
 
-            });
+            if(arg1.Result !== null && arg1.Result !== 'null'){
+
+                if (result.hasOwnProperty('_id')) {
+                    delete result['_id']
+                }
+                DbHandler.SaveAnPublicActivity(result, req, (response) => {
+                    if (JSON.parse(response).IsSuccess === 'true' || JSON.parse(response).IsSuccess === true) {
+                        //console.log(response);
+                        callback(null, JSON.parse(response));
+                    } else {
+                        callback(arg1, null);
+                    }
+
+                });
+            }
+            else{
+                callback(arg1, null);
+            }
+
+
         },
         function (arg1, callback) {
 
