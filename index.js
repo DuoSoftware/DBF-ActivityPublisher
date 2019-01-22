@@ -4,7 +4,7 @@ const restify  = require('restify'),
   jwt = require('restify-jwt'),
   secret = require('dvp-common-lite/Authentication/Secret.js'),
   uploads = require('./middlewares/uploads'),
-  activityHandler = require('./worker/activityHandler');
+  activityHandler = require('./worker/activityHandler'),
   authorization = require('dvp-common-lite/Authentication/Authorization.js'),
   MongooseConnection = new require('dbf-dbmodels/MongoConnection');
 
@@ -19,6 +19,12 @@ const server = restify.createServer({
 
 const cors = restifyCORS({
   allowHeaders: ['authorization', 'Authorization'],
+});
+
+
+process.on('uncaughtException', function (err) {
+    console.error(err);
+    console.log("Node NOT Exiting...");
 });
 
 server.pre(cors.preflight);
