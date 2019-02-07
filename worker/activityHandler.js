@@ -15,7 +15,7 @@ const publish = (req, res, next) => {
         authToken = RequestOps.parseToken(req);
 
     try {
-        let apParser = new ActivityPackageParser(activityPkg.name, activityPkg.srcpath);
+        let apParser = new ActivityPackageParser(/*activityPkg.name,*/ activityPkg.srcpath);
         let activity = apParser.parse();
 
         // publish activity to npm registry

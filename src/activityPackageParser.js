@@ -3,9 +3,10 @@ const path = require('path'),
   PackageJSON = require('./packageJson');
 
 class ActivityPackageParser {
-  constructor(pkgname, pkgpath) {
-    if (pkgname && typeof pkgpath === 'string' && pkgpath.length) {
-      this.bundle_name = pkgname;
+  constructor(/*pkgname,*/ pkgpath) {
+    if (typeof pkgpath === 'string' && pkgpath.length) {
+      // pkgname && 
+      // this.bundle_name = pkgname;
 
       let abPkgPath = path.resolve(pkgpath);
       if(FileSystemOps.isFileExists(abPkgPath)) {

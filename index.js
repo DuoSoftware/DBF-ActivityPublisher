@@ -4,6 +4,7 @@ const restify  = require('restify'),
   jwt = require('restify-jwt'),
   secret = require('dvp-common-lite/Authentication/Secret.js'),
   uploads = require('./middlewares/uploads'),
+  download = require('./middlewares/download'),
   activityHandler = require('./worker/activityHandler'),
   authorization = require('dvp-common-lite/Authentication/Authorization.js'),
   MongooseConnection = new require('dbf-dbmodels/MongoConnection');
@@ -38,6 +39,10 @@ server.post('/activity/publish', authorization({resource: "user", action: "read"
     'maxSize': 100, // MB
     'unloadTo': ''
 }), activityHandler.publish);
+
+server.post('/activity/remote/publish', authorization({resource: "user", action: "read"}), download({
+  dest: 'output'
+}), activityHandler.publish)
 
 server.post('/activity/unpublish/:id', authorization({
     resource: "user",
