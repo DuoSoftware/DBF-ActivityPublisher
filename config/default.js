@@ -13,7 +13,7 @@ module.exports = {
     },
     "Host": {
         "resource": "cluster",
-        "port": 3000
+        "port": 4646
     },
     "Mongo": {
         "ip": "",
