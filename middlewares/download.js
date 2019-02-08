@@ -12,7 +12,6 @@ const download = (url, destpath) => {
 
     https.get(url, (res) => {
       if (res.statusCode !== 200) {
-        fs.unlink(filepath);
         reject('Error getting while downloading the activity bundle.');
       }
 
