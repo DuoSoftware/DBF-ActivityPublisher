@@ -48,9 +48,9 @@ const publish = (req, res, next) => {
                     // deploy and run created activity in each of the pod(server)
                     return Promise.all(serversToStart);
                 } else {
-                    // return Promise.reject(new Error('No server registries found.'));
-                    res.send({success: true, message: `The ${activity.name}, version ${activity.version} published successfully. But no pods found for deploy.`});
-                    next();
+                    return Promise.reject(new Error('No server registries found.'));
+                    // res.send({success: true, message: `The ${activity.name}, version ${activity.version} published successfully. But no pods found for deploy.`});
+                    // next();
                 }
             })
             .then(() => {
